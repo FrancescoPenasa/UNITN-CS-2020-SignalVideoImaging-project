@@ -65,3 +65,363 @@ end
 
 figure(3)
 volshow(ZM)
+
+% Create a matrix of edge starting from ZM
+CM  = zeros (m,n,z);
+DN  = im2uint8(V);
+DNM = zeros (m,n,z);
+DNM = im2uint8(DNM);
+DDIF= 255*ones(m,n,z);
+
+% Matrix to check if a seed has been processed
+PR  = zeros (m,n,z);
+
+% Matrix that checks if a pixel has been processed in a certain cycle
+% (infer uniform enlargment in all directions)
+CC  = zeros (m,n,z);
+
+% Matrix that checks the decimation process
+CD = zeros(m,n,z);
+
+%%%%%%%%%%%%%%%%%%%%%%%
+% REMOVING SEED IN EXCESS
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Removing the seed in vertical direction
+for i=1:m
+    for j=1:n
+        for k=1:z
+            if (ZM(i,j,k)>0 && CD(i,j,k)==0)
+                c=1;
+                di=ZM(i,j,k);
+                while (((i+c)<m) && (ZM(i+c,j,k)>0))
+                    c=c+1;
+                    ZM(i+c-1,j,k) = 0;
+                end
+                if (c>1)
+                    u = round(i+(c/2));
+                    ZM(u,j,k)= di;
+                    CM(u,j,k)=1;
+                    CD(u,j,k)=1;
+                    DNM (u,j,k)= DN (i,j,k);
+                    ZM(i,j,k) =0;
+                else
+                 DNM(i,j,k)=DN(i,j,k);
+                 CM(i,j,k)=1;
+                end
+            end
+        end
+    end
+end
+
+
+% Examinating the NE-SW direction
+for i=1:m
+    for j=1:n
+        for k=1:z
+            if (ZM(i,j,k)>0 && CD(i,j,k)==0)
+                c=1;
+                di=ZM(i,j,k); 
+            while ((i+c<m) && (j-c>1) && (k-c>1) && ZM(i+c,j-c,k-c)>0)
+                    c=c+1;
+                    ZM(i+c-1,j-c+1,k-c+1) = 0;
+                    CM(i+c-1,j-c+1,k-c+1) = 0;
+            end
+                if (c>1)
+                    u = round(i+(c/2));
+                    v = round(j-(c/2));
+                    w = round(k-(c/2));
+                    ZM(u,v,w)= di;
+                    CM(u,v,w)=1;
+                    CD(u,v,w)=1;
+                    DNM (u,v,w)= DN (i,j,k);
+                    ZM(i,j,k) =0;
+                    CM(i,j,k)=0;
+                end
+            end
+        end
+    end
+end
+
+CD = zeros(m,n);
+
+
+
+% Examinating the NW-SE direction
+for i=1:m
+    for j=1:n
+        for k=1:z
+            if (ZM(i,j,k)>0 && CD(i,j,k)==0)
+                c=1;
+                di=ZM(i,j,k); 
+                while ((i+c<m) && (j+c<n) && (k+c<z) && ZM(i+c,j+c,k+c)>0)
+                    c=c+1;
+                    ZM(i+c-1,j+c-1,k+c-1) = 0;
+                    CM(i+c-1,j+c-1,k+c-1) = 0;
+                end
+                if (c>1)
+                    u = round(i+(c/2));
+                    v = round(j+(c/2));
+                    w = round(k+(c/2));
+                    ZM(u,v,w)= di;
+                    CM(u,v,w)=1;
+                    CD(u,v,w)=1;
+                    DNM (u,v,w)= DN (i,j,k);
+                    ZM(i,j,k) =0;
+                    CM(i,j,k)=0;
+                end
+            end
+        end
+    end
+end
+
+% Removing seeds 2px-away from existing one
+for i=1:m
+    for j=1:n
+        for k=1:z
+            if (CM(i,j,k)==1 && i<(m-2) && j<(n-2) && k<(z-2) && i>2 && j>2 && k>2)
+                CM(i-2,j-2,k-2)=0;
+                CM(i-2,j-1,k-2)=0;
+                CM(i-2,j,k-2)=0;
+                CM(i-2,j+1,k-2)=0;
+                CM(i-2,j+2,k-2)=0;
+                CM(i-1,j-2,k-2)=0;
+                CM(i-1,j-1,k-2)=0;
+                CM(i-1,j,k-2)=0;
+                CM(i-1,j+1,k-2)=0;
+                CM(i-1,j+2,k-2)=0;
+                CM(i,j-2,k-2)=0;
+                CM(i,j-1,k-2)=0;
+                CM(i,j+1,k-2)=0;
+                CM(i,j+2,k-2)=0;
+                CM(i+1,j-2,k-2)=0;
+                CM(i+1,j-1,k-2)=0;
+                CM(i+1,j,k-2)=0;
+                CM(i+1,j+1,k-2)=0;
+                CM(i+1,j+2,k-2)=0;
+                CM(i+2,j-2,k-2)=0;
+                CM(i+2,j-1,k-2)=0;
+                CM(i+2,j,k-2)=0;
+                CM(i+2,j+1,k-2)=0;
+                CM(i+2,j+2,k-2)=0;
+                
+                CM(i-2,j-2,k-1)=0;
+                CM(i-2,j-1,k-1)=0;
+                CM(i-2,j,k-1)=0;
+                CM(i-2,j+1,k-1)=0;
+                CM(i-2,j+2,k-1)=0;
+                CM(i-1,j-2,k-1)=0;
+                CM(i-1,j-1,k-1)=0;
+                CM(i-1,j,k-1)=0;
+                CM(i-1,j+1,k-1)=0;
+                CM(i-1,j+2,k-1)=0;
+                CM(i,j-2,k-1)=0;
+                CM(i,j-1,k-1)=0;
+                CM(i,j+1,k-1)=0;
+                CM(i,j+2,k-1)=0;
+                CM(i+1,j-2,k-1)=0;
+                CM(i+1,j-1,k-1)=0;
+                CM(i+1,j,k-1)=0;
+                CM(i+1,j+1,k-1)=0;
+                CM(i+1,j+2,k-1)=0;
+                CM(i+2,j-2,k-1)=0;
+                CM(i+2,j-1,k-1)=0;
+                CM(i+2,j,k-1)=0;
+                CM(i+2,j+1,k-1)=0;
+                CM(i+2,j+2,k-1)=0;
+                
+                CM(i-2,j-2,k)=0;
+                CM(i-2,j-1,k)=0;
+                CM(i-2,j,k)=0;
+                CM(i-2,j+1,k)=0;
+                CM(i-2,j+2,k)=0;
+                CM(i-1,j-2,k)=0;
+                CM(i-1,j-1,k)=0;
+                CM(i-1,j,k)=0;
+                CM(i-1,j+1,k)=0;
+                CM(i-1,j+2,k)=0;
+                CM(i,j-2,k)=0;
+                CM(i,j-1,k)=0;
+                CM(i,j+1,k)=0;
+                CM(i,j+2,k)=0;
+                CM(i+1,j-2,k)=0;
+                CM(i+1,j-1,k)=0;
+                CM(i+1,j,k)=0;
+                CM(i+1,j+1,k)=0;
+                CM(i+1,j+2,k)=0;
+                CM(i+2,j-2,k)=0;
+                CM(i+2,j-1,k)=0;
+                CM(i+2,j,k)=0;
+                CM(i+2,j+1,k)=0;
+                CM(i+2,j+2,k)=0;
+                
+                CM(i-2,j-2,k+1)=0;
+                CM(i-2,j-1,k+1)=0;
+                CM(i-2,j,k+1)=0;
+                CM(i-2,j+1,k+1)=0;
+                CM(i-2,j+2,k+1)=0;
+                CM(i-1,j-2,k+1)=0;
+                CM(i-1,j-1,k+1)=0;
+                CM(i-1,j,k+1)=0;
+                CM(i-1,j+1,k+1)=0;
+                CM(i-1,j+2,k+1)=0;
+                CM(i,j-2,k+1)=0;
+                CM(i,j-1,k+1)=0;
+                CM(i,j+1,k+1)=0;
+                CM(i,j+2,k+1)=0;
+                CM(i+1,j-2,k+1)=0;
+                CM(i+1,j-1,k+1)=0;
+                CM(i+1,j,k+1)=0;
+                CM(i+1,j+1,k+1)=0;
+                CM(i+1,j+2,k+1)=0;
+                CM(i+2,j-2,k+1)=0;
+                CM(i+2,j-1,k+1)=0;
+                CM(i+2,j,k+1)=0;
+                CM(i+2,j+1,k+1)=0;
+                CM(i+2,j+2,k+1)=0;
+                
+                CM(i-2,j-2,k+2)=0;
+                CM(i-2,j-1,k+2)=0;
+                CM(i-2,j,k+2)=0;
+                CM(i-2,j+1,k+2)=0;
+                CM(i-2,j+2,k+2)=0;
+                CM(i-1,j-2,k+2)=0;
+                CM(i-1,j-1,k+2)=0;
+                CM(i-1,j,k+2)=0;
+                CM(i-1,j+1,k+2)=0;
+                CM(i-1,j+2,k+2)=0;
+                CM(i,j-2,k+2)=0;
+                CM(i,j-1,k+2)=0;
+                CM(i,j+1,k+2)=0;
+                CM(i,j+2,k+2)=0;
+                CM(i+1,j-2,k+2)=0;
+                CM(i+1,j-1,k+2)=0;
+                CM(i+1,j,k+2)=0;
+                CM(i+1,j+1,k+2)=0;
+                CM(i+1,j+2,k+2)=0;
+                CM(i+2,j-2,k+2)=0;
+                CM(i+2,j-1,k+2)=0;
+                CM(i+2,j,k+2)=0;
+                CM(i+2,j+1,k+2)=0;
+                CM(i+2,j+2,k+2)=0;
+                
+                
+                
+                
+                
+
+            end
+        end
+    end
+end
+
+figure; imshow(CM); title('Seeds'); 
+volshow(CM)
+
+dnt =2;
+totc =0;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Growing
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+while totc < 300
+ % 4-Connected growing
+     for i = 1:m
+        for j = 1:n
+            for k=1:z
+                if (PR(i,j,k) == 0 && CM(i,j,k)==1 && CC(i,j,k)==0)
+                    if (j>1)
+                        dsx =abs(DNM(i,j,k)-DN(i,j-1,k));
+                    end
+                    if (j<n)
+                        ddx =abs(DNM(i,j,k)-DN(i,j+1,k));
+                    end
+                    if (i>1)
+                        dup =abs(DNM(i,j,k)-DN(i-1,j,k));
+                    end
+                    if (i<m)
+                        ddown=abs(DNM(i,j,k)-DN(i+1,j,k));
+                    end
+                    if (k>1)
+                        dinside=abs(DNM(i,j,k)-DN(i,j,k-1));
+                    end
+                    if (k<z)
+                        doutside=abs(DNM(i,j,k)-DN(i,j,k+1));
+                    end
+                    % Growing to SX
+                    if (j>1   && dsx<dnt && (DDIF(i,j-1,k)>dsx))
+
+                        ZM(i,j-1,k) = ZM (i,j,k);
+                        CM(i,j-1,k)= 1;
+                        DNM(i,j-1,k) = DNM (i,j,k);
+                        CC(i,j-1,k) = 1;
+                        DDIF(i,j-1,k) = dsx;
+
+
+                    end
+                     % Growing to DX
+                    if (j<n  && (ddx)<dnt && (DDIF(i,j+1,k)>ddx))
+
+                        ZM(i,j+1,k) = ZM (i,j,k);
+                        CM(i,j+1,k) =1;
+                        DNM(i,j+1,k) = DNM (i,j,k);
+                        CC(i,j+1,k) = 1;
+                        DDIF(i,j+1,k)= ddx;
+
+
+                    end
+
+                     % Growing to N
+                    if (i>1   && (dup)<dnt &&  (DDIF(i-1,j,k)>dup))
+
+                        ZM(i-1,j,k) = ZM (i,j,k);
+                        CM(i-1,j,k) =1;
+                        DNM(i-1,j,k) = DNM (i,j,k);
+                        CC(i-1,j,k) = 1;
+                        DDIF(i-1,j,k) = dup;
+
+                    end
+
+                    % Growing to S
+                    if (i<m && (ddown)<dnt && (DDIF(i+1,j,k)>ddown))
+                        ZM(i+1,j,k) = ZM (i,j,k);
+                        CM(i+1,j,k) =1;
+                        DNM(i+1,j,k) = DNM (i,j,k);
+                        CC(i+1,j,k) = 1;
+                        DDIF(i+1,j,k) = ddown;
+
+                    end
+                    
+                    % Growing inside
+                    if (k>1   && (dinside)<dnt &&  (DDIF(i,j,k-1)>dinside))
+
+                        ZM(i,j,k-1) = ZM (i,j,k);
+                        CM(i,j,k-1) =1;
+                        DNM(i,j,k-1) = DNM (i,j,k);
+                        CC(i,j,k-1) = 1;
+                        DDIF(i,j,k-1) = dinside;
+
+                    end
+
+                    
+                    % Growing outside
+                    if (k<z && (doutside)<dnt && (DDIF(i,j,k+1)>doutside))
+                        ZM(i,j,k+1) = ZM (i,j,k);
+                        CM(i,j,k+1) =1;
+                        DNM(i,j,k+1) = DNM (i,j,k);
+                        CC(i,j,k+1) = 1;
+                        DDIF(i,j,k+1) = doutside;
+
+                    end
+
+                   CM(i,j,k)=0; 
+                   PR (i,j,k) =1;
+                end
+            end
+         end
+         CC= zeros(m,n,z);
+      totc = totc+1;
+
+     end
+end
+volshow(DNM);
+imshow(DNM(:,:,200));
