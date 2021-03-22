@@ -1,4 +1,4 @@
-filename = "volume-covid19-A-0000.nii";
+filename = "../Data/volume-covid19-A-0000.nii.gz";
 V = niftiread(filename);
 whos V
 [m,n,z] = size(V);
@@ -9,6 +9,7 @@ whos V
 figure(1)
 volshow(V)
 BW = edge3(V,'approxcanny',0.4);
+
 figure(2)
 volshow(BW)
 
@@ -169,6 +170,7 @@ for i=1:m
     end
 end
 
+figure(3)
 volshow(CM)
 % Removing seeds 2px-away from existing one
 for i=1:m
@@ -310,7 +312,7 @@ for i=1:m
     end
 end
 
-
+figure(4)
 volshow(CM)
 
 dnt =2;
@@ -413,16 +415,19 @@ while totc < 300
                 end
             end
          end
-         CC= zeros(m,n,z);
-      totc = totc+1;
-
      end
+     CC= zeros(m,n,z);
+     totc = totc+1
 end
 
-imshow(DNM(:,:,100));
+figure(5)
+imshow(imadjust(DNM(:,:,100)));
+
+figure(6)
 volshow(DNM);
 
-imshow(CM(:,:,200));
+figure(7)
+imshow(imadjust(CM(:,:,200)));
 
 % Not Processed pixels: using 4-connected growing some pixels are left
 % behind==> fill them.
@@ -484,6 +489,8 @@ while totc<50
 end
 
 
-
+figure(8)
 volshow(DNM);
-imshow(DNM(:,:,160));
+
+figure(9)
+imshow(imadjust(DNM(:,:,160)));
