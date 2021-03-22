@@ -143,9 +143,7 @@ for i=1:m
     end
 end
 
-CD = zeros(m,n);
-
-
+CD = zeros(m,n,z);
 
 % Examinating the NW-SE direction
 for i=1:m
@@ -315,7 +313,7 @@ for i=1:m
     end
 end
 
-figure; imshow(CM); title('Seeds'); 
+
 volshow(CM)
 
 dnt =2;
@@ -425,3 +423,68 @@ while totc < 300
 end
 volshow(DNM);
 imshow(DNM(:,:,200));
+
+% Not Processed pixels: using 4-connected growing some pixels are left
+% behind==> fill them.
+
+totc =0;
+while totc<50
+    for i=1:m
+        for j=1:n
+            for k=1:z
+                if(ZM(i,j,k)==0)
+                    cs=1;
+                    cw=1;
+                    while(cw<100)
+
+                    if((j-cs)>0 &&(ZM(i,j-cs,k)>0) )
+                        ZM(i,j)=ZM(i,j-cs,k);
+                        DNM(i,j)=DNM(i,j-cs,k);
+                        PR(i,j)=1;
+                        break
+                    end
+                    if((j+cs)<n &&(ZM(i,j+cs,k)>0))
+                        ZM(i,j,k)=ZM(i,j+cs,k);
+                        DNM(i,j,k)=DNM(i,j+cs,k);
+                        PR(i,j,k)=1;
+                        break
+                    end
+                    if( (i-cs)>0 &&(ZM(i-cs,j,k)>0))
+                        ZM(i,j,k)=ZM(i-cs,j,k);
+                        DNM(i,j,k)=DNM(i-cs,j,k);
+                        PR(i,j,k)=1;
+                        break
+                    end
+                    if( (i+cs<m) && (ZM(i+cs,j,k)>0))
+                        ZM(i,j,k)=ZM(i+cs,j,k);
+                        DNM(i,j,k)=DNM(i+cs,j,k);
+                        PR(i,j,k)=1;
+                        break
+                    end
+                    if( (k-cs)>0 &&(ZM(i,j,k-cs)>0))
+                        ZM(i,j,k)=ZM(i,j,k-cs);
+                        DNM(i,j,k)=DNM(i,j,k-cs);
+                        PR(i,j,k)=1;
+                        break
+                    end
+                    if( (k+cs<z) && (ZM(i,j,k+cs)>0))
+                        ZM(i,j,k)=ZM(i,j,k+cs);
+                        DNM(i,j,k)=DNM(i,j,k+cs);
+                        PR(i,j,k)=1;
+                        break
+                    end
+                    cw = cw+1;
+                    cs=cs+1;
+                    end
+                end
+            end
+        end
+       totc= totc+1;
+    end
+end
+
+
+
+volshow(DNM);
+imshow(DNM(:,:,160));
+
