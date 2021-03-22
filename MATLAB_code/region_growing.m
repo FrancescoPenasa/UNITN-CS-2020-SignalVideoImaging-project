@@ -16,7 +16,6 @@ volshow(BW)
 ZM = zeros(m,n,z); 
 % Counter of the space between two different boundaries
 cs = 1;
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 % SEEDING
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -33,17 +32,15 @@ while (i<m)
         while(k<z)
         % Verify not to exceed the dimension of the image summing cs
             while ((k+cs)<z)
-            
             % If the pixel is part of an edge, break
                 if (BW(i,j,k) == 1)
                     break
                 end
-            
             % Enlarge cs until I find another edge, then label the zone
             % with 'l' in the center of the zone (in ZM)
                 if ((BW(i,j,k+cs)==1)|| ((k+cs)==(z-1)))
-                    u = round(((k+cs)+k)/2);
-                    ZM(i,u,k)=l;  
+                    w = round(((k+cs)+k)/2);
+                    ZM(i,j,w)=l;  
                     l=l+1;
                     break 
                 else
@@ -56,15 +53,12 @@ while (i<m)
         % Increment the value for searching (manually, it's not a for
         % cycle)
         j = j+1;
-        
     end
     % Increment the value for searching (manually, it's not a for
     % cycle)
     i = i+1;
 end
 
-figure(3)
-volshow(ZM)
 
 % Create a matrix of edge starting from ZM
 CM  = zeros (m,n,z);
@@ -113,6 +107,8 @@ for i=1:m
         end
     end
 end
+
+CD = zeros(m,n,z);
 
 
 % Examinating the NE-SW direction
@@ -173,6 +169,7 @@ for i=1:m
     end
 end
 
+volshow(CM)
 % Removing seeds 2px-away from existing one
 for i=1:m
     for j=1:n
@@ -421,8 +418,11 @@ while totc < 300
 
      end
 end
+
+imshow(DNM(:,:,100));
 volshow(DNM);
-imshow(DNM(:,:,200));
+
+imshow(CM(:,:,200));
 
 % Not Processed pixels: using 4-connected growing some pixels are left
 % behind==> fill them.
@@ -487,4 +487,3 @@ end
 
 volshow(DNM);
 imshow(DNM(:,:,160));
-
