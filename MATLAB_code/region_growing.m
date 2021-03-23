@@ -1,10 +1,24 @@
 filename = "../Data/volume-covid19-A-0000.nii.gz";
 V = niftiread(filename);
 whos V
+V = im2single(V);
 [m,n,z] = size(V);
+J = imadjust(V(:,:,160));
+figure;
+imshow(J); title('Original image')
+
+D=imadjustn(V);
+figure;
+montage(D,'Indices', 150:169);title('Original image') % multiple plot
 
 % c = V(:,:,6); %n is the slice number that you want to visualize.
 % imshow(c,[])
+
+XY = V(:,:,160);
+XZ = squeeze(V(256,:,:));
+figure
+imshow(XY,[],'Border','tight');
+imshow(XZ,[],'Border','tight');
 
 figure(1)
 volshow(V)
