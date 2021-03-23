@@ -20,6 +20,12 @@ figure
 imshow(XY,[],'Border','tight');
 imshow(XZ,[],'Border','tight');
 
+
+% Gaussian filter ?
+sigma=2;
+volSmooth = imgaussfilt3(D, sigma);
+figure;
+
 figure(1)
 volshow(V)
 BW = edge3(V,'approxcanny',0.4);
