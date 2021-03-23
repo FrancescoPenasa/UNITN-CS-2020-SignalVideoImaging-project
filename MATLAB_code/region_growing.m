@@ -25,6 +25,9 @@ imshow(XZ,[],'Border','tight');
 sigma=2;
 volSmooth = imgaussfilt3(D, sigma);
 figure;
+montage(volSmooth,'Indices', 150:169); title('Gaussian filtered image volume')
+
+
 
 figure(1)
 volshow(V)
