@@ -36,6 +36,30 @@ BW = edge3(V,'approxcanny',0.4);
 figure(2)
 volshow(BW)
 
+% Filter and clear border
+D=imadjustn(V);
+%Gaussian filter
+sigma=6;
+volSmooth = imgaussfilt3(D, sigma);
+% Box filter
+volSmooth=imboxfilt3(volSmooth,[5 5 3]);
+%edge
+BW = edge3(volSmooth,'approxcanny',0.4);
+figure
+imshow(BW(:,:,160)); title('Edges');
+% clear border
+BWc2 = imclearborder(BW,8);
+figure;
+imshow(BWc2(:,:,160)); 
+% remove edges
+result1=bwareafilt(BWc2(:,:,160),1);
+result2=bwareafilt(squeeze(BWc2(160,:,:)),1);
+figure;
+imshow(result1); 
+figure;
+imshow(result2); 
+
+
 % Zone map
 ZM = zeros(m,n,z); 
 % Counter of the space between two different boundaries
