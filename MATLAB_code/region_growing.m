@@ -105,14 +105,14 @@ i=1;
 j=1;
 k=1;
 
-% Searching among all the pixel of the image (m X n X z)
+% Searching among all the pixel of the image (m X n X z) 
 while (i<m)
     j=1;
     while(j<n)
         k=1;
-        while(k<z)
+        while(k<z-1)
         % Verify not to exceed the dimension of the image summing cs
-            while ((k+cs)<z)
+            while ((k+cs)<z-1)
             % If the pixel is part of an edge, break
                 if (BW(i,j,k) == 1)
                     break
@@ -126,9 +126,10 @@ while (i<m)
                     break 
                 else
                     cs =cs+1;
-                end               
+                end 
+                k = k+cs+1;
             end 
-            k = k+cs+1;
+            k = k+1;
             cs =1;
         end
         % Increment the value for searching (manually, it's not a for
