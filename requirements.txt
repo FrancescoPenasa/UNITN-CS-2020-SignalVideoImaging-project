@@ -1,3 +1,4 @@
+os
+nibabel
 numpy
-time
-region_growing_python
+# region_growing_python
