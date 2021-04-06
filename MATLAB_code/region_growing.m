@@ -105,7 +105,7 @@ i=1;
 j=1;
 k=1;
 
-% Searching among all the pixel of the image (m X n X z)
+% Searching among all the pixel of the image (m X n X z) 
 while (i<m)
     j=1;
     while(j<n)
@@ -126,7 +126,7 @@ while (i<m)
                     break 
                 else
                     cs =cs+1;
-                end               
+                end
             end 
             k = k+cs+1;
             cs =1;
