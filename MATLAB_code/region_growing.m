@@ -395,178 +395,90 @@ end
 figure(4)
 volshow(CM)
 
-dnt =2;
-totc =0;
+[r,c,v] = ind2sub(size(CM),find(CM == 1));
+sum(CM(:) == 1) %check the number of seeds
+
+
+len=length(r);
+masks=ones(512,512,341);
+outputMask=zeros(512,512,341);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  Growing
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-while totc < 300
- % 4-Connected growing
-     for i = 1:m
-        for j = 1:n
-            for k=1:z
-                if (PR(i,j,k) == 0 && CM(i,j,k)==1 && CC(i,j,k)==0)
-                    if (j>1)
-                        dsx =abs(DNM(i,j,k)-DN(i,j-1,k));
-                    end
-                    if (j<n)
-                        ddx =abs(DNM(i,j,k)-DN(i,j+1,k));
-                    end
-                    if (i>1)
-                        dup =abs(DNM(i,j,k)-DN(i-1,j,k));
-                    end
-                    if (i<m)
-                        ddown=abs(DNM(i,j,k)-DN(i+1,j,k));
-                    end
-                    if (k>1)
-                        dinside=abs(DNM(i,j,k)-DN(i,j,k-1));
-                    end
-                    if (k<z)
-                        doutside=abs(DNM(i,j,k)-DN(i,j,k+1));
-                    end
-                    % Growing to SX
-                    if (j>1   && dsx<dnt && (DDIF(i,j-1,k)>dsx))
+neighbordMode="26n";
+threshold=1;
+i=1;
+totc=0;
+while totc<300
+    i=1;
+    disp(totc);
+    len=length(r);
+    disp(len);
+    while len>0 %not 
+        newItem=[r(i),c(i),v(i)];
+        len=len-1;
+        %disp(len);
+        if neighbordMode == "26n"
+             neighbors = {newItem(1)-1, newItem(2)-1, newItem(3)-1;   newItem(1)-1, newItem(2)-1, newItem(3);   newItem(1)-1, newItem(2)-1, newItem(3)+1;
+                                 newItem(1)-1, newItem(2), newItem(3)-1;     newItem(1)-1, newItem(2), newItem(3);     newItem(1)-1, newItem(2), newItem(3)+1;
+                                 newItem(1)-1, newItem(2)+1, newItem(3)-1;   newItem(1)-1, newItem(2)+1, newItem(3);   newItem(1)-1, newItem(2)+1, newItem(3)+1;
+                                 newItem(1), newItem(2)-1, newItem(3)-1;     newItem(1), newItem(2)-1, newItem(3);     newItem(1), newItem(2)-1, newItem(3)+1;
+                                 newItem(1), newItem(2), newItem(3)-1;       newItem(1), newItem(2), newItem(3)+1;     newItem(1), newItem(2)+1, newItem(3)-1;
+                                 newItem(1), newItem(2)+1, newItem(3);       newItem(1), newItem(2)+1, newItem(3)+1;   newItem(1)+1, newItem(2)-1, newItem(3)-1;
+                                 newItem(1)+1, newItem(2)-1, newItem(3);     newItem(1)+1, newItem(2)-1, newItem(3)+1; newItem(1)+1, newItem(2), newItem(3)-1;
+                                 newItem(1)+1, newItem(2), newItem(3);       newItem(1)+1, newItem(2), newItem(3)+1;   newItem(1)+1, newItem(2)+1, newItem(3)-1;
+                                 newItem(1)+1, newItem(2)+1, newItem(3);     newItem(1)+1, newItem(2)+1, newItem(3)+1};
 
-                        ZM(i,j-1,k) = ZM (i,j,k);
-                        CM(i,j-1,k)= 1;
-                        DNM(i,j-1,k) = DNM (i,j,k);
-                        CC(i,j-1,k) = 1;
-                        DDIF(i,j-1,k) = dsx;
-
-
-                    end
-                     % Growing to DX
-                    if (j<n  && (ddx)<dnt && (DDIF(i,j+1,k)>ddx))
-
-                        ZM(i,j+1,k) = ZM (i,j,k);
-                        CM(i,j+1,k) =1;
-                        DNM(i,j+1,k) = DNM (i,j,k);
-                        CC(i,j+1,k) = 1;
-                        DDIF(i,j+1,k)= ddx;
-
-
-                    end
-
-                     % Growing to N
-                    if (i>1   && (dup)<dnt &&  (DDIF(i-1,j,k)>dup))
-
-                        ZM(i-1,j,k) = ZM (i,j,k);
-                        CM(i-1,j,k) =1;
-                        DNM(i-1,j,k) = DNM (i,j,k);
-                        CC(i-1,j,k) = 1;
-                        DDIF(i-1,j,k) = dup;
-
-                    end
-
-                    % Growing to S
-                    if (i<m && (ddown)<dnt && (DDIF(i+1,j,k)>ddown))
-                        ZM(i+1,j,k) = ZM (i,j,k);
-                        CM(i+1,j,k) =1;
-                        DNM(i+1,j,k) = DNM (i,j,k);
-                        CC(i+1,j,k) = 1;
-                        DDIF(i+1,j,k) = ddown;
-
-                    end
-                    
-                    % Growing inside
-                    if (k>1   && (dinside)<dnt &&  (DDIF(i,j,k-1)>dinside))
-
-                        ZM(i,j,k-1) = ZM (i,j,k);
-                        CM(i,j,k-1) =1;
-                        DNM(i,j,k-1) = DNM (i,j,k);
-                        CC(i,j,k-1) = 1;
-                        DDIF(i,j,k-1) = dinside;
-
-                    end
-
-                    
-                    % Growing outside
-                    if (k<z && (doutside)<dnt && (DDIF(i,j,k+1)>doutside))
-                        ZM(i,j,k+1) = ZM (i,j,k);
-                        CM(i,j,k+1) =1;
-                        DNM(i,j,k+1) = DNM (i,j,k);
-                        CC(i,j,k+1) = 1;
-                        DDIF(i,j,k+1) = doutside;
-
-                    end
-
-                   CM(i,j,k)=0; 
-                   PR (i,j,k) =1;
-                end
-            end
-         end
-     end
-     CC= zeros(m,n,z);
-     totc = totc+1
-end
-
-figure(5)
-imshow(imadjust(DNM(:,:,100)));
-
-figure(6)
-volshow(DNM);
-
-figure(7)
-imshow(imadjust(CM(:,:,200)));
-
-% Not Processed pixels: using 4-connected growing some pixels are left
-% behind==> fill them.
-
-totc =0;
-while totc<50
-    for i=1:m
-        for j=1:n
-            for k=1:z
-                if(ZM(i,j,k)==0)
-                    cs=1;
-                    cw=1;
-                    while(cw<100)
-
-                    if((j-cs)>0 &&(ZM(i,j-cs,k)>0) )
-                        ZM(i,j)=ZM(i,j-cs,k);
-                        DNM(i,j)=DNM(i,j-cs,k);
-                        PR(i,j)=1;
-                        break
-                    end
-                    if((j+cs)<n &&(ZM(i,j+cs,k)>0))
-                        ZM(i,j,k)=ZM(i,j+cs,k);
-                        DNM(i,j,k)=DNM(i,j+cs,k);
-                        PR(i,j,k)=1;
-                        break
-                    end
-                    if( (i-cs)>0 &&(ZM(i-cs,j,k)>0))
-                        ZM(i,j,k)=ZM(i-cs,j,k);
-                        DNM(i,j,k)=DNM(i-cs,j,k);
-                        PR(i,j,k)=1;
-                        break
-                    end
-                    if( (i+cs<m) && (ZM(i+cs,j,k)>0))
-                        ZM(i,j,k)=ZM(i+cs,j,k);
-                        DNM(i,j,k)=DNM(i+cs,j,k);
-                        PR(i,j,k)=1;
-                        break
-                    end
-                    if( (k-cs)>0 &&(ZM(i,j,k-cs)>0))
-                        ZM(i,j,k)=ZM(i,j,k-cs);
-                        DNM(i,j,k)=DNM(i,j,k-cs);
-                        PR(i,j,k)=1;
-                        break
-                    end
-                    if( (k+cs<z) && (ZM(i,j,k+cs)>0))
-                        ZM(i,j,k)=ZM(i,j,k+cs);
-                        DNM(i,j,k)=DNM(i,j,k+cs);
-                        PR(i,j,k)=1;
-                        break
-                    end
-                    cw = cw+1;
-                    cs=cs+1;
+             for n=1:length(neighbors)
+                 x=neighbors(n,1); x=x{:};
+                 y=neighbors(n,2); y=y{:};
+                 z=neighbors(n,3); z=z{:};
+                if (x <= 512 && y <= 512 && z <= 341 && x > 0 && y > 0 && z > 0 && CM(r(i),c(i),v(i)) == 1)
+                    intensity_neig = DNM(x,y,z); %intensity neighbors
+                    intensity_point = DNM(r(i),c(i),v(i)); %intensity seed
+                    if  (intensity_neig < intensity_point+threshold && intensity_neig > intensity_point-threshold && outputMask(x,y,z) == 0)
+                        outputMask(x,y,z) = 1;
+                        CM(x,y,z) = 1;            
+                        DNM(x,y,z) = DNM(r(i),c(i),v(i)); %assign at the neighbour the same intensity as the seeds
+    %                     r = [r;x]; % add element at the end of the r array
+    %                     c = [c;y];
+    %                     v = [v;z];
+    %                     len=len+1;
+                        disp(len);
                     end
                 end
-            end
+             end
         end
-       totc= totc+1;
+        if (neighbordMode == "6n")
+            neighbors ={newItem(1), newItem(2), newItem(3)-1;
+                    newItem(1), newItem(2), newItem(3)+1;
+                    newItem(1), newItem(2)-1, newItem(3);
+                    newItem(1), newItem(2)+1, newItem(3);
+                    newItem(1)-1, newItem(2), newItem(3);
+                    newItem(1)+1, newItem(2), newItem(3)};
+             for n=1:length(neighbors)
+                 x=neighbors(n,1); x=x{:};
+                 y=neighbors(n,2); y=y{:};
+                 z=neighbors(n,3); z=z{:};
+                if (x <= 512 && y <= 512 && z <= 341 && x > 0 && y > 0 && z > 0 && masks(x,y,z) == 1)
+                    intensity = DN(x,y,z);
+                    if  (intensity < intensity+threshold && intensity > intensity-threshold && outputMask(x,y,z) == 0)
+                        outputMask(z,y,x) = 1;
+    %                     r = [r;x]; % add element at the end of the r array
+    %                     c = [c;y];
+    %                     v = [v;z];
+    %                     len=len+1;
+                    end
+                end
+             end
+
+        end 
+        i=i+1;
     end
-end
+  totc=totc+1;  
+end     
+volumeViewer(DNM);
+
 
 
 figure(8)
