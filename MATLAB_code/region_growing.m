@@ -252,7 +252,7 @@ end
 
 figure(3)
 volshow(CM)
-% Removing seeds 2px-away from existing one
+% Removing seeds 2px-away from existing one--> too many seeds 
 for i=1:m
     for j=1:n
         for k=1:z
@@ -391,6 +391,149 @@ for i=1:m
         end
     end
 end
+
+% REDUCE NUMBER OF SEEDS (new code)
+%Removing seeds 10px-away from existing one
+c=1;
+b=1;
+for i=1:m
+    for j=1:n
+        for k=1:z
+            for c=1:10
+                for b=1:10
+                    l=max(c,b);
+                    if (CM(i,j,k)==1 && i<(m-l) && j<(n-l) && k<(z-l) && i>l && j>l && k>l)
+                        CM(i-c,j-c,k-c)=0;
+                        CM(i-c,j-b,k-c)=0;
+                        CM(i-c,j,k-c)=0;
+                        CM(i-c,j+b,k-c)=0;
+                        CM(i-c,j+c,k-c)=0;
+                        CM(i-b,j-c,k-c)=0;
+                        CM(i-b,j-b,k-c)=0;
+                        CM(i-b,j,k-c)=0;
+                        CM(i-b,j+b,k-c)=0;
+                        CM(i-b,j+c,k-c)=0;
+                        CM(i,j-c,k-c)=0;
+                        CM(i,j-b,k-c)=0;
+                        CM(i,j+b,k-c)=0;
+                        CM(i,j+c,k-c)=0;
+                        CM(i+b,j-c,k-c)=0;
+                        CM(i+b,j-b,k-c)=0;
+                        CM(i+b,j,k-c)=0;
+                        CM(i+b,j+b,k-c)=0;
+                        CM(i+b,j+c,k-c)=0;
+                        CM(i+c,j-c,k-c)=0;
+                        CM(i+c,j-b,k-c)=0;
+                        CM(i+c,j,k-c)=0;
+                        CM(i+c,j+b,k-c)=0;
+                        CM(i+c,j+c,k-c)=0;
+
+                        CM(i-c,j-c,k-b)=0;
+                        CM(i-c,j-b,k-b)=0;
+                        CM(i-c,j,k-b)=0;
+                        CM(i-c,j+b,k-b)=0;
+                        CM(i-c,j+c,k-b)=0;
+                        CM(i-b,j-c,k-b)=0;
+                        CM(i-b,j-b,k-b)=0;
+                        CM(i-b,j,k-b)=0;
+                        CM(i-b,j+b,k-b)=0;
+                        CM(i-b,j+c,k-b)=0;
+                        CM(i,j-c,k-b)=0;
+                        CM(i,j-b,k-b)=0;
+                        CM(i,j+b,k-b)=0;
+                        CM(i,j+c,k-b)=0;
+                        CM(i+b,j-c,k-b)=0;
+                        CM(i+b,j-b,k-b)=0;
+                        CM(i+b,j,k-b)=0;
+                        CM(i+b,j+b,k-b)=0;
+                        CM(i+b,j+c,k-b)=0;
+                        CM(i+b,j-c,k-b)=0;
+                        CM(i+c,j-b,k-b)=0;
+                        CM(i+c,j,k-b)=0;
+                        CM(i+c,j+b,k-b)=0;
+                        CM(i+c,j+c,k-b)=0;
+
+                        CM(i-c,j-c,k)=0;
+                        CM(i-c,j-b,k)=0;
+                        CM(i-c,j,k)=0;
+                        CM(i-c,j+b,k)=0;
+                        CM(i-c,j+c,k)=0;
+                        CM(i-b,j-c,k)=0;
+                        CM(i-b,j-b,k)=0;
+                        CM(i-b,j,k)=0;
+                        CM(i-b,j+b,k)=0;
+                        CM(i-b,j+c,k)=0;
+                        CM(i,j-c,k)=0;
+                        CM(i,j-b,k)=0;
+                        CM(i,j+b,k)=0;
+                        CM(i,j+c,k)=0;
+                        CM(i+b,j-c,k)=0;
+                        CM(i+b,j-c,k)=0;
+                        CM(i+b,j,k)=0;
+                        CM(i+b,j+b,k)=0;
+                        CM(i+b,j+c,k)=0;
+                        CM(i+c,j-c,k)=0;
+                        CM(i+c,j-b,k)=0;
+                        CM(i+c,j,k)=0;
+                        CM(i+c,j+b,k)=0;
+                        CM(i+c,j+c,k)=0;
+
+                        CM(i-c,j-c,k+b)=0;
+                        CM(i-c,j-b,k+b)=0;
+                        CM(i-c,j,k+b)=0;
+                        CM(i-c,j+b,k+b)=0;
+                        CM(i-c,j+c,k+b)=0;
+                        CM(i-b,j-c,k+b)=0;
+                        CM(i-b,j-b,k+b)=0;
+                        CM(i-b,j,k+b)=0;
+                        CM(i-b,j+b,k+b)=0;
+                        CM(i-b,j+c,k+b)=0;
+                        CM(i,j-c,k+b)=0;
+                        CM(i,j-b,k+b)=0;
+                        CM(i,j+b,k+b)=0;
+                        CM(i,j+c,k+b)=0;
+                        CM(i+b,j-c,k+b)=0;
+                        CM(i+b,j-b,k+b)=0;
+                        CM(i+b,j,k+b)=0;
+                        CM(i+b,j+b,k+b)=0;
+                        CM(i+b,j+c,k+b)=0;
+                        CM(i+c,j-c,k+b)=0;
+                        CM(i+c,j-b,k+b)=0;
+                        CM(i+c,j,k+b)=0;
+                        CM(i+c,j+b,k+b)=0;
+                        CM(i+c,j+c,k+b)=0;
+
+                        CM(i-c,j-c,k+c)=0;
+                        CM(i-c,j-b,k+c)=0;
+                        CM(i-c,j,k+c)=0;
+                        CM(i-c,j+b,k+c)=0;
+                        CM(i-c,j+c,k+c)=0;
+                        CM(i-b,j-c,k+c)=0;
+                        CM(i-b,j-b,k+c)=0;
+                        CM(i-b,j,k+c)=0;
+                        CM(i-b,j+b,k+c)=0;
+                        CM(i-b,j+c,k+c)=0;
+                        CM(i,j-c,k+c)=0;
+                        CM(i,j-c,k+c)=0;
+                        CM(i,j+b,k+c)=0;
+                        CM(i,j+c,k+c)=0;
+                        CM(i+b,j-c,k+c)=0;
+                        CM(i+b,j-b,k+c)=0;
+                        CM(i+b,j,k+c)=0;
+                        CM(i+b,j+b,k+c)=0;
+                        CM(i+b,j+c,k+c)=0;
+                        CM(i+c,j-c,k+c)=0;
+                        CM(i+c,j-b,k+c)=0;
+                        CM(i+c,j,k+c)=0;
+                        CM(i+c,j+b,k+c)=0;
+                        CM(i+c,j+c,k+c)=0;
+                    end
+                end 
+            end
+        end
+    end
+end
+
 
 figure(4)
 volshow(CM)
