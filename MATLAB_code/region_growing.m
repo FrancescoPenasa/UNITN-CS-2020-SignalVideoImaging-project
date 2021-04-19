@@ -538,12 +538,18 @@ end
 figure(4)
 volshow(CM)
 
+%%
+
+DN_flat = DN(:);
+[GC,GR] = groupcounts(DN_flat);
+
 [r,c,v] = ind2sub(size(CM),find(CM == 1));
 sum(CM(:) == 1) %check the number of seeds
 
 
 len=length(r);
 masks=ones(512,512,341);
+
 outputMask=zeros(512,512,341);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  Growing
@@ -552,7 +558,7 @@ neighbordMode="26n";
 threshold=1;
 i=1;
 totc=0;
-while totc<300
+while totc<30
     i=1;
     disp(totc);
     len=length(r);
@@ -577,12 +583,14 @@ while totc<300
                  y=neighbors(n,2); y=y{:};
                  z=neighbors(n,3); z=z{:};
                 if (x <= 512 && y <= 512 && z <= 341 && x > 0 && y > 0 && z > 0 && CM(r(i),c(i),v(i)) == 1)
-                    intensity_neig = DNM(x,y,z); %intensity neighbors
-                    intensity_point = DNM(r(i),c(i),v(i)); %intensity seed
-                    if  (intensity_neig < intensity_point+threshold && intensity_neig > intensity_point-threshold && outputMask(x,y,z) == 0)
+                    intensity_neig = DN(x,y,z); %intensity neighbors
+                    intensity_point = DN(r(i),c(i),v(i)); %intensity seed
+                    outputMask(r(i),c(i),v(i)) = intensity_point;
+                    if  (intensity_neig <= intensity_point+threshold && intensity_neig > intensity_point-threshold && outputMask(x,y,z) == 0)
                         outputMask(x,y,z) = 1;
                         CM(x,y,z) = 1;            
-                        DNM(x,y,z) = DNM(r(i),c(i),v(i)); %assign at the neighbour the same intensity as the seeds
+                        outputMask(r(i),c(i),v(i)) = intensity_point;
+                        %DNM(x,y,z) = DNM(r(i),c(i),v(i)); %assign at the neighbour the same intensity as the seeds
     %                     r = [r;x]; % add element at the end of the r array
     %                     c = [c;y];
     %                     v = [v;z];
@@ -605,7 +613,7 @@ while totc<300
                  z=neighbors(n,3); z=z{:};
                 if (x <= 512 && y <= 512 && z <= 341 && x > 0 && y > 0 && z > 0 && masks(x,y,z) == 1)
                     intensity = DN(x,y,z);
-                    if  (intensity < intensity+threshold && intensity > intensity-threshold && outputMask(x,y,z) == 0)
+                    if  (intensity <= intensity+threshold && intensity > intensity-threshold && outputMask(x,y,z) == 0)
                         outputMask(z,y,x) = 1;
     %                     r = [r;x]; % add element at the end of the r array
     %                     c = [c;y];
@@ -620,12 +628,17 @@ while totc<300
     end
   totc=totc+1;  
 end     
-volumeViewer(DNM);
+volumeViewer(outputMatrix);
 
 
 
-figure(8)
-volshow(DNM);
+% figure(8)
+% volshow(DNM);
+% 
+% figure(9)
+% imshow(imadjust(DNM(:,:,160)));
 
-figure(9)
-imshow(imadjust(DNM(:,:,160)));
+%% REGION GROWING (Prova) 
+
+masks=ones(512,512,341);
+output = rg_function(CM, DN, masks, 1, "6n");
