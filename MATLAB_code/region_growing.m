@@ -38,19 +38,21 @@ volshow(BW)
 
 % Filter and clear border
 D=imadjustn(V);
-%Gaussian filter
+%Gaussian
 sigma=6;
 volSmooth = imgaussfilt3(D, sigma);
-% Box filter
+% Box
 volSmooth=imboxfilt3(volSmooth,[5 5 3]);
+%figure;
+%montage(volSmooth,'Indices', 150:169); title('Gaussian filtered image volume')
 %edge
 BW = edge3(volSmooth,'approxcanny',0.4);
 figure
-imshow(BW(:,:,160)); title('Edges');
-% clear border
+imshow(BW(:,:,50)); title('Edges');
+volumeViewer(BW);
 BWc2 = imclearborder(BW,8);
-figure;
-imshow(BWc2(:,:,160)); 
+volumeViewer(BWc2)
+
 % remove edges
 % cut image XY
 XY=zeros(341,251);
@@ -93,10 +95,8 @@ volumeViewer(J)
 
 
 
-% Zone map
-ZM = zeros(m,n,z); 
-% Counter of the space between two different boundaries
-cs = 1;
+[m,n,z]=size(V); 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 % SEEDING
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -104,15 +104,20 @@ l=1;
 i=1;
 j=1;
 k=1;
+% Zone map
+ZM = zeros(m,n,z); 
+% Counter of the space between two different boundaries
+cs = 1;
 
 % Searching among all the pixel of the image (m X n X z) 
+ 
 while (i<m)
     j=1;
     while(j<n)
         k=1;
         while(k<z)
         % Verify not to exceed the dimension of the image summing cs
-            while ((k+cs)<z)
+            while ((k+cs)<z-1)
             % If the pixel is part of an edge, break
                 if (BW(i,j,k) == 1)
                     break
@@ -126,9 +131,10 @@ while (i<m)
                     break 
                 else
                     cs =cs+1;
-                end
+                end 
+                k = k+cs+1;
             end 
-            k = k+cs+1;
+            k = k+1;
             cs =1;
         end
         % Increment the value for searching (manually, it's not a for
@@ -140,12 +146,12 @@ while (i<m)
     i = i+1;
 end
 
-
+% volumeViewer(ZM)
 % Create a matrix of edge starting from ZM
 CM  = zeros (m,n,z);
-DN  = im2uint8(V);
+DN  = im2uint8(V); %figure
 DNM = zeros (m,n,z);
-DNM = im2uint8(DNM);
+DNM = im2uint8(DNM); %immagini con puntini 
 DDIF= 255*ones(m,n,z);
 
 % Matrix to check if a seed has been processed
@@ -250,9 +256,11 @@ for i=1:m
     end
 end
 
-figure(3)
-volshow(CM)
-% Removing seeds 2px-away from existing one--> too many seeds 
+% figure
+% volumeViewer(CM)
+% figure;volumeViewer(DN)
+
+%Removing seeds 2px-away from existing one
 for i=1:m
     for j=1:n
         for k=1:z
@@ -391,9 +399,7 @@ for i=1:m
         end
     end
 end
-
-% REDUCE NUMBER OF SEEDS (new code)
-%Removing seeds 10px-away from existing one
+%Removing seeds c-px-away from existing one
 c=1;
 b=1;
 for i=1:m
