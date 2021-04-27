@@ -5,8 +5,6 @@ function outputMask = rg_function(seeds, intensity_matrix, mask, threshold, mode
     
     [seeds_x,seeds_y,seeds_z] = ind2sub(size(seeds),find(seeds == 1));
     
-    [seeds_x,seeds_y,seeds_z]
-    
     seeds_q = CQueue();
     for i = 1:length(seeds_x)
         seeds_q.push([seeds_x(i), seeds_y(i), seeds_z(i)])
@@ -21,9 +19,9 @@ function outputMask = rg_function(seeds, intensity_matrix, mask, threshold, mode
         
         for n = 1:length(neighbors)
             
-            x=neighbors(n,1);
-            y=neighbors(n,2);
-            z=neighbors(n,3);
+            x=cell2mat(neighbors(n,1));
+            y=cell2mat(neighbors(n,2));
+            z=cell2mat(neighbors(n,3));
              
             if (x <= 512 && y <= 512 && z <= 341 && x > 0 && y > 0 && z > 0 && mask(x,y,z) == 1)
                 
@@ -31,7 +29,7 @@ function outputMask = rg_function(seeds, intensity_matrix, mask, threshold, mode
                                 
                 if  (intensity_neig <= (intensity_point + threshold) && intensity_neig >= (intensity_point - threshold) && outputMask(x,y,z) == 0)
                     outputMask(x,y,z) = idivide((intensity_neig + intensity_point), 2);
-                    seeds_q.push();            
+                    seeds_q.push([x, y, z]);            
                 end
             end
         end
@@ -52,7 +50,7 @@ function neighbors = get_neighbors(point, mode)
                  point(1)+1, point(2), point(3);       point(1)+1, point(2), point(3)+1;   point(1)+1, point(2)+1, point(3)-1;
                  point(1)+1, point(2)+1, point(3);     point(1)+1, point(2)+1, point(3)+1};
     end
-    if (neighbordMode == "6n")
+    if (mode == "6n")
             neighbors ={point(1), point(2), point(3)-1;
                     point(1), point(2), point(3)+1;
                     point(1), point(2)-1, point(3);

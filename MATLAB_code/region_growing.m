@@ -55,35 +55,35 @@ volumeViewer(BWc2)
 
 % remove edges
 % cut image XY
-XY=zeros(341,251);
-for k=1:z
-XY = imcrop(BWc2(:,:,z),[160 90 250 340]); %cut figure [xmin ymin width height]
-XY = imclearborder(XY,18);
-XY = bwpropfilt(XY,'EulerNumber',[0 0]);
-XY = imresize(XY,[512 512]);
-BW(:,:,z)=XY;
-end 
-
-
-% cut image YZ
-YZ=zeros(331,276);
-for j=1:n
-YZ = imcrop(squeeze(BWc2(:,j,:)),[50 95 275 330]); %cut figure [xmin ymin width height]
-YZ = imclearborder(YZ,18);
-YZ = bwpropfilt(YZ,'EulerNumber',[0 0]);
-YZ= imresize(YZ,[512 341]);
-BW(:,j,:)=YZ;
-end
-
-% cut image XZ
-XZ=zeros(241,261);
-for i=1:m
-XZ = imcrop(squeeze(BWc2(i,:,:)),[60 160 260 240]); %cut figure [xmin ymin width height]
-XZ = imclearborder(XZ,18);
-XZ = bwpropfilt(XZ,'EulerNumber',[0 0]);
-XZ = imresize(XZ,[512 341]);
-BW(i,:,:)=XZ;
-end
+% XY=zeros(341,251);
+% for k=1:z
+% XY = imcrop(BWc2(:,:,z),[160 90 250 340]); %cut figure [xmin ymin width height]
+% XY = imclearborder(XY,18);
+% XY = bwpropfilt(XY,'EulerNumber',[0 0]);
+% XY = imresize(XY,[512 512]);
+% BW(:,:,z)=XY;
+% end 
+% 
+% 
+% % cut image YZ
+% YZ=zeros(331,276);
+% for j=1:n
+% YZ = imcrop(squeeze(BWc2(:,j,:)),[50 95 275 330]); %cut figure [xmin ymin width height]
+% YZ = imclearborder(YZ,18);
+% YZ = bwpropfilt(YZ,'EulerNumber',[0 0]);
+% YZ= imresize(YZ,[512 341]);
+% BW(:,j,:)=YZ;
+% end
+% 
+% % cut image XZ
+% XZ=zeros(241,261);
+% for i=1:m
+% XZ = imcrop(squeeze(BWc2(i,:,:)),[60 160 260 240]); %cut figure [xmin ymin width height]
+% XZ = imclearborder(XZ,18);
+% XZ = bwpropfilt(XZ,'EulerNumber',[0 0]);
+% XZ = imresize(XZ,[512 341]);
+% BW(i,:,:)=XZ;
+% end
 
 BW=imclearborder(BW,8);
 volumeViewer(BW)
@@ -93,7 +93,8 @@ volumeViewer(J)
 
 
 
-
+%%%%%% PROVA 
+BW = BWc2;
 
 [m,n,z]=size(V); 
 
@@ -647,4 +648,4 @@ volumeViewer(outputMatrix);
 %% REGION GROWING (Prova) 
 
 masks=ones(512,512,341);
-output = rg_function(CM, DN, masks, 1, "6n");
+output = rg_function(CM, DN, masks, 0, "6n");

@@ -42,8 +42,8 @@ classdef CQueue < handle
                 obj.rear = 2;
                 obj.capacity = 100;                
             else
-                obj.buffer = cell(3000000, 1);
-                obj.capacity = 3000000;
+                obj.buffer = cell(5000000, 1);
+                obj.capacity = 5000000;
                 obj.beg = 1;
                 obj.rear = 1;
             end
