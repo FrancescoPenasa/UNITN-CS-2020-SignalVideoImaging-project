@@ -2,6 +2,8 @@
 function outputMask = rg_function(seeds, intensity_matrix, mask, threshold, mode)
     [m, n, k] = size(intensity_matrix);
     outputMask = zeros(m,n,k);
+    outputMask=im2uint8(outputMask);
+
     
     [seeds_x,seeds_y,seeds_z] = ind2sub(size(seeds),find(seeds == 1));
     
