@@ -8,7 +8,7 @@ function outputMask = rg_function(seeds, intensity_matrix, mask, threshold, mode
     
     seeds_q = CQueue();
     for i = 1:length(seeds_x)
-        if mask(seeds_x(i), seeds_y(i), seeds_z(i)) == 1
+        if (mask(seeds_x(i), seeds_y(i), seeds_z(i)) == 1)
             seeds_q.push([seeds_x(i), seeds_y(i), seeds_z(i)])
         end
     end
@@ -49,7 +49,7 @@ end
 
 
 function neighbors = get_neighbors(point, mode)
-    if mode == "26n"
+    if (mode == "26n")
     neighbors = {point(1)-1, point(2)-1, point(3)-1;   point(1)-1, point(2)-1, point(3);   point(1)-1, point(2)-1, point(3)+1;
                  point(1)-1, point(2), point(3)-1;     point(1)-1, point(2), point(3);     point(1)-1, point(2), point(3)+1;
                  point(1)-1, point(2)+1, point(3)-1;   point(1)-1, point(2)+1, point(3);   point(1)-1, point(2)+1, point(3)+1;
