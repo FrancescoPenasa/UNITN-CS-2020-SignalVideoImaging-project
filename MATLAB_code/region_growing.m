@@ -4,37 +4,37 @@ whos V
 V = im2single(V);
 [m,n,z] = size(V);
 J = imadjust(V(:,:,160));
-figure;
-imshow(J); title('Original image')
+%figure;
+%imshow(J); title('Original image')
 
 D=imadjustn(V);
-figure;
-montage(D,'Indices', 150:169);title('Original image') % multiple plot
+% figure;
+% montage(D,'Indices', 150:169);title('Original image') % multiple plot
 
 % c = V(:,:,6); %n is the slice number that you want to visualize.
 % imshow(c,[])
 
 XY = V(:,:,160);
 XZ = squeeze(V(256,:,:));
-figure
-imshow(XY,[],'Border','tight');
-imshow(XZ,[],'Border','tight');
+% figure
+% imshow(XY,[],'Border','tight');
+% imshow(XZ,[],'Border','tight');
 
 
 % Gaussian filter ?
 sigma=2;
 volSmooth = imgaussfilt3(D, sigma);
-figure;
-montage(volSmooth,'Indices', 150:169); title('Gaussian filtered image volume')
+% figure;
+% montage(volSmooth,'Indices', 150:169); title('Gaussian filtered image volume')
 
 
 
-figure(1)
-volshow(V)
+% figure(1)
+% volshow(V)
 BW = edge3(V,'approxcanny',0.4);
 
-figure(2)
-volshow(BW)
+% figure(2)
+% volshow(BW)
 
 % Filter and clear border
 D=imadjustn(V);
@@ -47,11 +47,11 @@ volSmooth=imboxfilt3(volSmooth,[5 5 3]);
 %montage(volSmooth,'Indices', 150:169); title('Gaussian filtered image volume')
 %edge
 BW = edge3(volSmooth,'approxcanny',0.4);
-figure
-imshow(BW(:,:,50)); title('Edges');
-volumeViewer(BW);
+% figure
+% imshow(BW(:,:,50)); title('Edges');
+% volumeViewer(BW);
 BWc2 = imclearborder(BW,8);
-volumeViewer(BWc2)
+% volumeViewer(BWc2)
 
 % remove edges
 % cut image XY
@@ -89,8 +89,6 @@ BW=imclearborder(BW,8);
 volumeViewer(BW)
 J=medfilt3(BW);
 volumeViewer(J)
-
-
 
 
 %%%%%% PROVA 
@@ -261,153 +259,151 @@ end
 % volumeViewer(CM)
 % figure;volumeViewer(DN)
 
-%Removing seeds 2px-away from existing one
-for i=1:m
-    for j=1:n
-        for k=1:z
-            if (CM(i,j,k)==1 && i<(m-2) && j<(n-2) && k<(z-2) && i>2 && j>2 && k>2)
-                CM(i-2,j-2,k-2)=0;
-                CM(i-2,j-1,k-2)=0;
-                CM(i-2,j,k-2)=0;
-                CM(i-2,j+1,k-2)=0;
-                CM(i-2,j+2,k-2)=0;
-                CM(i-1,j-2,k-2)=0;
-                CM(i-1,j-1,k-2)=0;
-                CM(i-1,j,k-2)=0;
-                CM(i-1,j+1,k-2)=0;
-                CM(i-1,j+2,k-2)=0;
-                CM(i,j-2,k-2)=0;
-                CM(i,j-1,k-2)=0;
-                CM(i,j+1,k-2)=0;
-                CM(i,j+2,k-2)=0;
-                CM(i+1,j-2,k-2)=0;
-                CM(i+1,j-1,k-2)=0;
-                CM(i+1,j,k-2)=0;
-                CM(i+1,j+1,k-2)=0;
-                CM(i+1,j+2,k-2)=0;
-                CM(i+2,j-2,k-2)=0;
-                CM(i+2,j-1,k-2)=0;
-                CM(i+2,j,k-2)=0;
-                CM(i+2,j+1,k-2)=0;
-                CM(i+2,j+2,k-2)=0;
-                
-                CM(i-2,j-2,k-1)=0;
-                CM(i-2,j-1,k-1)=0;
-                CM(i-2,j,k-1)=0;
-                CM(i-2,j+1,k-1)=0;
-                CM(i-2,j+2,k-1)=0;
-                CM(i-1,j-2,k-1)=0;
-                CM(i-1,j-1,k-1)=0;
-                CM(i-1,j,k-1)=0;
-                CM(i-1,j+1,k-1)=0;
-                CM(i-1,j+2,k-1)=0;
-                CM(i,j-2,k-1)=0;
-                CM(i,j-1,k-1)=0;
-                CM(i,j+1,k-1)=0;
-                CM(i,j+2,k-1)=0;
-                CM(i+1,j-2,k-1)=0;
-                CM(i+1,j-1,k-1)=0;
-                CM(i+1,j,k-1)=0;
-                CM(i+1,j+1,k-1)=0;
-                CM(i+1,j+2,k-1)=0;
-                CM(i+2,j-2,k-1)=0;
-                CM(i+2,j-1,k-1)=0;
-                CM(i+2,j,k-1)=0;
-                CM(i+2,j+1,k-1)=0;
-                CM(i+2,j+2,k-1)=0;
-                
-                CM(i-2,j-2,k)=0;
-                CM(i-2,j-1,k)=0;
-                CM(i-2,j,k)=0;
-                CM(i-2,j+1,k)=0;
-                CM(i-2,j+2,k)=0;
-                CM(i-1,j-2,k)=0;
-                CM(i-1,j-1,k)=0;
-                CM(i-1,j,k)=0;
-                CM(i-1,j+1,k)=0;
-                CM(i-1,j+2,k)=0;
-                CM(i,j-2,k)=0;
-                CM(i,j-1,k)=0;
-                CM(i,j+1,k)=0;
-                CM(i,j+2,k)=0;
-                CM(i+1,j-2,k)=0;
-                CM(i+1,j-1,k)=0;
-                CM(i+1,j,k)=0;
-                CM(i+1,j+1,k)=0;
-                CM(i+1,j+2,k)=0;
-                CM(i+2,j-2,k)=0;
-                CM(i+2,j-1,k)=0;
-                CM(i+2,j,k)=0;
-                CM(i+2,j+1,k)=0;
-                CM(i+2,j+2,k)=0;
-                
-                CM(i-2,j-2,k+1)=0;
-                CM(i-2,j-1,k+1)=0;
-                CM(i-2,j,k+1)=0;
-                CM(i-2,j+1,k+1)=0;
-                CM(i-2,j+2,k+1)=0;
-                CM(i-1,j-2,k+1)=0;
-                CM(i-1,j-1,k+1)=0;
-                CM(i-1,j,k+1)=0;
-                CM(i-1,j+1,k+1)=0;
-                CM(i-1,j+2,k+1)=0;
-                CM(i,j-2,k+1)=0;
-                CM(i,j-1,k+1)=0;
-                CM(i,j+1,k+1)=0;
-                CM(i,j+2,k+1)=0;
-                CM(i+1,j-2,k+1)=0;
-                CM(i+1,j-1,k+1)=0;
-                CM(i+1,j,k+1)=0;
-                CM(i+1,j+1,k+1)=0;
-                CM(i+1,j+2,k+1)=0;
-                CM(i+2,j-2,k+1)=0;
-                CM(i+2,j-1,k+1)=0;
-                CM(i+2,j,k+1)=0;
-                CM(i+2,j+1,k+1)=0;
-                CM(i+2,j+2,k+1)=0;
-                
-                CM(i-2,j-2,k+2)=0;
-                CM(i-2,j-1,k+2)=0;
-                CM(i-2,j,k+2)=0;
-                CM(i-2,j+1,k+2)=0;
-                CM(i-2,j+2,k+2)=0;
-                CM(i-1,j-2,k+2)=0;
-                CM(i-1,j-1,k+2)=0;
-                CM(i-1,j,k+2)=0;
-                CM(i-1,j+1,k+2)=0;
-                CM(i-1,j+2,k+2)=0;
-                CM(i,j-2,k+2)=0;
-                CM(i,j-1,k+2)=0;
-                CM(i,j+1,k+2)=0;
-                CM(i,j+2,k+2)=0;
-                CM(i+1,j-2,k+2)=0;
-                CM(i+1,j-1,k+2)=0;
-                CM(i+1,j,k+2)=0;
-                CM(i+1,j+1,k+2)=0;
-                CM(i+1,j+2,k+2)=0;
-                CM(i+2,j-2,k+2)=0;
-                CM(i+2,j-1,k+2)=0;
-                CM(i+2,j,k+2)=0;
-                CM(i+2,j+1,k+2)=0;
-                CM(i+2,j+2,k+2)=0;
-                
-                
-                
-                
-                
-
-            end
-        end
-    end
-end
+% %Removing seeds 2px-away from existing one
+% for i=1:m
+%     for j=1:n
+%         for k=1:z
+%             if (CM(i,j,k)==1 && i<(m-2) && j<(n-2) && k<(z-2) && i>2 && j>2 && k>2)
+%                 CM(i-2,j-2,k-2)=0;
+%                 CM(i-2,j-1,k-2)=0;
+%                 CM(i-2,j,k-2)=0;
+%                 CM(i-2,j+1,k-2)=0;
+%                 CM(i-2,j+2,k-2)=0;
+%                 CM(i-1,j-2,k-2)=0;
+%                 CM(i-1,j-1,k-2)=0;
+%                 CM(i-1,j,k-2)=0;
+%                 CM(i-1,j+1,k-2)=0;
+%                 CM(i-1,j+2,k-2)=0;
+%                 CM(i,j-2,k-2)=0;
+%                 CM(i,j-1,k-2)=0;
+%                 CM(i,j+1,k-2)=0;
+%                 CM(i,j+2,k-2)=0;
+%                 CM(i+1,j-2,k-2)=0;
+%                 CM(i+1,j-1,k-2)=0;
+%                 CM(i+1,j,k-2)=0;
+%                 CM(i+1,j+1,k-2)=0;
+%                 CM(i+1,j+2,k-2)=0;
+%                 CM(i+2,j-2,k-2)=0;
+%                 CM(i+2,j-1,k-2)=0;
+%                 CM(i+2,j,k-2)=0;
+%                 CM(i+2,j+1,k-2)=0;
+%                 CM(i+2,j+2,k-2)=0;
+%                 
+%                 CM(i-2,j-2,k-1)=0;
+%                 CM(i-2,j-1,k-1)=0;
+%                 CM(i-2,j,k-1)=0;
+%                 CM(i-2,j+1,k-1)=0;
+%                 CM(i-2,j+2,k-1)=0;
+%                 CM(i-1,j-2,k-1)=0;
+%                 CM(i-1,j-1,k-1)=0;
+%                 CM(i-1,j,k-1)=0;
+%                 CM(i-1,j+1,k-1)=0;
+%                 CM(i-1,j+2,k-1)=0;
+%                 CM(i,j-2,k-1)=0;
+%                 CM(i,j-1,k-1)=0;
+%                 CM(i,j+1,k-1)=0;
+%                 CM(i,j+2,k-1)=0;
+%                 CM(i+1,j-2,k-1)=0;
+%                 CM(i+1,j-1,k-1)=0;
+%                 CM(i+1,j,k-1)=0;
+%                 CM(i+1,j+1,k-1)=0;
+%                 CM(i+1,j+2,k-1)=0;
+%                 CM(i+2,j-2,k-1)=0;
+%                 CM(i+2,j-1,k-1)=0;
+%                 CM(i+2,j,k-1)=0;
+%                 CM(i+2,j+1,k-1)=0;
+%                 CM(i+2,j+2,k-1)=0;
+%                 
+%                 CM(i-2,j-2,k)=0;
+%                 CM(i-2,j-1,k)=0;
+%                 CM(i-2,j,k)=0;
+%                 CM(i-2,j+1,k)=0;
+%                 CM(i-2,j+2,k)=0;
+%                 CM(i-1,j-2,k)=0;
+%                 CM(i-1,j-1,k)=0;
+%                 CM(i-1,j,k)=0;
+%                 CM(i-1,j+1,k)=0;
+%                 CM(i-1,j+2,k)=0;
+%                 CM(i,j-2,k)=0;
+%                 CM(i,j-1,k)=0;
+%                 CM(i,j+1,k)=0;
+%                 CM(i,j+2,k)=0;
+%                 CM(i+1,j-2,k)=0;
+%                 CM(i+1,j-1,k)=0;
+%                 CM(i+1,j,k)=0;
+%                 CM(i+1,j+1,k)=0;
+%                 CM(i+1,j+2,k)=0;
+%                 CM(i+2,j-2,k)=0;
+%                 CM(i+2,j-1,k)=0;
+%                 CM(i+2,j,k)=0;
+%                 CM(i+2,j+1,k)=0;
+%                 CM(i+2,j+2,k)=0;
+%                 
+%                 CM(i-2,j-2,k+1)=0;
+%                 CM(i-2,j-1,k+1)=0;
+%                 CM(i-2,j,k+1)=0;
+%                 CM(i-2,j+1,k+1)=0;
+%                 CM(i-2,j+2,k+1)=0;
+%                 CM(i-1,j-2,k+1)=0;
+%                 CM(i-1,j-1,k+1)=0;
+%                 CM(i-1,j,k+1)=0;
+%                 CM(i-1,j+1,k+1)=0;
+%                 CM(i-1,j+2,k+1)=0;
+%                 CM(i,j-2,k+1)=0;
+%                 CM(i,j-1,k+1)=0;
+%                 CM(i,j+1,k+1)=0;
+%                 CM(i,j+2,k+1)=0;
+%                 CM(i+1,j-2,k+1)=0;
+%                 CM(i+1,j-1,k+1)=0;
+%                 CM(i+1,j,k+1)=0;
+%                 CM(i+1,j+1,k+1)=0;
+%                 CM(i+1,j+2,k+1)=0;
+%                 CM(i+2,j-2,k+1)=0;
+%                 CM(i+2,j-1,k+1)=0;
+%                 CM(i+2,j,k+1)=0;
+%                 CM(i+2,j+1,k+1)=0;
+%                 CM(i+2,j+2,k+1)=0;
+%                 
+%                 CM(i-2,j-2,k+2)=0;
+%                 CM(i-2,j-1,k+2)=0;
+%                 CM(i-2,j,k+2)=0;
+%                 CM(i-2,j+1,k+2)=0;
+%                 CM(i-2,j+2,k+2)=0;
+%                 CM(i-1,j-2,k+2)=0;
+%                 CM(i-1,j-1,k+2)=0;
+%                 CM(i-1,j,k+2)=0;
+%                 CM(i-1,j+1,k+2)=0;
+%                 CM(i-1,j+2,k+2)=0;
+%                 CM(i,j-2,k+2)=0;
+%                 CM(i,j-1,k+2)=0;
+%                 CM(i,j+1,k+2)=0;
+%                 CM(i,j+2,k+2)=0;
+%                 CM(i+1,j-2,k+2)=0;
+%                 CM(i+1,j-1,k+2)=0;
+%                 CM(i+1,j,k+2)=0;
+%                 CM(i+1,j+1,k+2)=0;
+%                 CM(i+1,j+2,k+2)=0;
+%                 CM(i+2,j-2,k+2)=0;
+%                 CM(i+2,j-1,k+2)=0;
+%                 CM(i+2,j,k+2)=0;
+%                 CM(i+2,j+1,k+2)=0;
+%                 CM(i+2,j+2,k+2)=0;
+%                 
+%                 
+%                 
+%                 
+%                 
+% 
+%             end
+%         end
+%     end
+% end
 %Removing seeds c-px-away from existing one
-c=1;
-b=1;
 for i=1:m
     for j=1:n
         for k=1:z
-            for c=1:10
-                for b=1:10
+            for c=1:30
+                for b=1:30
                     l=max(c,b);
                     if (CM(i,j,k)==1 && i<(m-l) && j<(n-l) && k<(z-l) && i>l && j>l && k>l)
                         CM(i-c,j-c,k-c)=0;
@@ -541,9 +537,9 @@ for i=1:m
     end
 end
 
-
-figure(4)
-volshow(CM)
+sum(CM(:) == 1) %check the number of seeds
+% figure(4)
+% volshow(CM)
 
 %%
 
@@ -551,7 +547,7 @@ DN_flat = DN(:);
 [GC,GR] = groupcounts(DN_flat);
 
 [r,c,v] = ind2sub(size(CM),find(CM == 1));
-sum(CM(:) == 1) %check the number of seeds
+
 
 
 len=length(r);
@@ -646,6 +642,51 @@ volumeViewer(outputMatrix);
 % imshow(imadjust(DNM(:,:,160)));
 
 %% REGION GROWING (Prova) 
+%%
+mask = zeros(m,n,z);
+check_seeds = zeros(m,n,z);
 
-masks=ones(512,512,341);
-output = rg_function(CM, DN, masks, 0, "6n");
+for x=200:400
+    for y=200:400
+        for z=150:300
+            mask(x,y,z) = 1;
+            
+            if CM(x,y,z) ==1
+                check_seeds(x,y,z) = DN(x,y,z);
+            end
+        end
+    end
+end
+
+values = unique(check_seeds);
+values_DN = unique(DN(200:400,200:400,150:300));
+
+heigth = 100;
+width = 500;
+color_seeds = zeros(heigth * length(values),width);
+color_DN = zeros(heigth * length(values_DN),width);
+
+for i=1:length(values)
+   row = (i-1)*heigth+1;
+   color_seeds(row:(row+heigth-1),:) = repmat(values(i),heigth,width);
+end
+
+for i=1:length(values_DN)
+   row = (i-1)*heigth+1;
+   color_DN(row:(row+heigth-1),:) = repmat(values_DN(i),heigth,width);
+end
+
+figure;
+imshow(color_seeds,[])
+
+figure;
+imshow(color_DN,[])
+
+figure;
+imshow(DN(200:400,200:400,230))
+
+tic;
+output = rg_function(CM, DN, mask, 0, "6n");
+toc;
+
+volumeViewer(output)

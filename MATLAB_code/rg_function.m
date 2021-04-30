@@ -8,7 +8,9 @@ function outputMask = rg_function(seeds, intensity_matrix, mask, threshold, mode
     
     seeds_q = CQueue();
     for i = 1:length(seeds_x)
-        seeds_q.push([seeds_x(i), seeds_y(i), seeds_z(i)])
+        if mask(seeds_x(i), seeds_y(i), seeds_z(i)) == 1
+            seeds_q.push([seeds_x(i), seeds_y(i), seeds_z(i)])
+        end
     end
     
     while ~seeds_q.isempty()
