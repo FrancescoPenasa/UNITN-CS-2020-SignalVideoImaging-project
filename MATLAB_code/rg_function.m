@@ -1,11 +1,12 @@
 
 function outputMask = rg_function(seeds, intensity_matrix, mask, threshold, mode)
+    % define the variables
     [m, n, k] = size(intensity_matrix);
     outputMask = zeros(m,n,k);
     outputMask=im2uint8(outputMask);
-    
     [seeds_x,seeds_y,seeds_z] = ind2sub(size(seeds),find(seeds == 1));
     
+    % initialize the algorithm
     seeds_q = CQueue();
     for i = 1:length(seeds_x)
         if (mask(seeds_x(i), seeds_y(i), seeds_z(i)) == 1)
@@ -13,6 +14,7 @@ function outputMask = rg_function(seeds, intensity_matrix, mask, threshold, mode
         end
     end
     
+    % algorithm start
     while ~seeds_q.isempty()
         point = seeds_q.pop();
         neighbors = get_neighbors(point, mode);
@@ -38,8 +40,6 @@ function outputMask = rg_function(seeds, intensity_matrix, mask, threshold, mode
                         outputMask(x,y,z) = intensity_point;
                         seeds_q.push([x, y, z]); 
                     end
-
-
                 end
             end
     end
