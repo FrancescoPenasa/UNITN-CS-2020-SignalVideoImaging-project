@@ -63,11 +63,11 @@ function neighbors = get_neighbors(point, mode)
                  point(1)+1, point(2)+1, point(3)-1;        point(1)+1, point(2)+1, point(3);       point(1)+1, point(2)+1, point(3)+1};   % x+1 ; y+1 ; z+-1
     end
     if (mode == "6n")
-            neighbors ={point(1), point(2), point(3)-1;
-                    point(1), point(2), point(3)+1;
-                    point(1), point(2)-1, point(3);
-                    point(1), point(2)+1, point(3);
-                    point(1)-1, point(2), point(3);
-                    point(1)+1, point(2), point(3)};
+            neighbors ={point(1),   point(2),   point(3)-1; # down
+                        point(1),   point(2),   point(3)+1; # up
+                        point(1),   point(2)-1, point(3);   # left
+                        point(1),   point(2)+1, point(3);   # right
+                        point(1)-1, point(2),   point(3);   # near 
+                        point(1)+1, point(2),   point(3)};  # far
     end
 end
