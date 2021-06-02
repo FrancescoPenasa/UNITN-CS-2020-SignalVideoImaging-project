@@ -19,7 +19,7 @@ volSmooth=imboxfilt3(volSmooth,[5 5 3]);
 
 %edge
 BW = edge3(volSmooth,'approxcanny',0.4);
-BW = imclearborder(BW,8);
+BW = imclearborder(BW,6);
 
 % Display edges
 volumeViewer(BW)
